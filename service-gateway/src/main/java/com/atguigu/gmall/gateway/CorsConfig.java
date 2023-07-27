@@ -1,0 +1,29 @@
+package com.atguigu.gmall.gateway;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+/**
+ * @author 24657
+ * @apiNote
+ * @date 2023/7/26 18:14
+ */
+@Configuration
+public class CorsConfig {
+    @Bean
+    public CorsWebFilter corsWebFilter(){
+        // cors跨域配置对象
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*"); //设置允许访问的网络
+        configuration.setAllowCredentials(true); // 设置是否从服务器获取cookie
+        configuration.addAllowedMethod("*"); // 设置请求方法 * 表示任意
+        configuration.addAllowedHeader("*"); // 所有请求头信息 * 表示任意
+        //配置源对象
+        UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
+        configurationSource.registerCorsConfiguration("/**",configuration);
+        return new CorsWebFilter(configurationSource);
+    }
+}

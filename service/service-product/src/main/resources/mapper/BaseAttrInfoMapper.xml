@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.gmall.product.mapper.BaseAttrInfoMapper">
+    <!--
+        resultMap：表示返回的映射结果集
+        id ： 表示唯一标识
+        type：表示返回结果集的数据类型
+        autoMapping : 自动映射
+    -->
+    <resultMap id="baseAttrInfoMap" type="com.atguigu.gmall.model.product.BaseAttrInfo" autoMapping="true">
+        <id property="id" column="id"></id>
+        <collection property="attrValueList" ofType="com.atguigu.gmall.model.product.BaseAttrValue" autoMapping="true">
+            <id column="attr_value_id" property="id"></id>
+        </collection>
+    </resultMap>
+    <select id="getAttrInfoList" resultMap="baseAttrInfoMap">
+        SELECT bai.id,
+        bai.attr_name,
+        bai.category_id,
+        bai.category_level,
+        bav.id attr_value_id,
+        bav.value_name,
+        bav.attr_id
+        FROM base_attr_info bai
+        INNER JOIN base_attr_value bav ON bai.id = bav.attr_id
+<!--        <where>-->
+<!--            <if test="category1Id != null and category1Id != 0">-->
+<!--                or (bai.category_id = #{category1Id} and bai.category_level = 1)-->
+<!--            </if>-->
+<!--            <if test="category2Id != null and category2Id != 0">-->
+<!--                or (bai.category_id = #{category2Id} and bai.category_level = 2)-->
+<!--            </if>-->
+<!--            <if test="category3Id != null and category3Id != 0">-->
+<!--                or (bai.category_id = #{category3Id} and bai.category_level = 3)-->
+<!--            </if>-->
+<!--        </where>-->
+        <where>
+            <if test="category1Id != null and category1Id != 0">
+                or (bai.category_id = #{category1Id} and bai.category_level = 1)
+            </if>
+            <if test="category2Id != null and category2Id != 0">
+                or (bai.category_id = #{category2Id} and bai.category_level = 2)
+            </if>
+            <if test="category3Id != null and category3Id != 0">
+                or (bai.category_id = #{category3Id} and bai.category_level = 3)
+            </if>
+        </where>
+        order by bai.category_level,bai.id
+    </select>
+</mapper>
