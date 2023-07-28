@@ -20,4 +20,8 @@ public interface ManageService {
     BaseAttrInfo getAttrInfo(Long attrId);
 
     IPage<SpuInfo> getSpuInfoPage(Page<SpuInfo> spuInfoPage, SpuInfo spuInfo);
+
+    void saveSpuInfo(SpuInfo spuInfo);
+
+    List<BaseSaleAttr> getBaseSaleAttrList();
 }
