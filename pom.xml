@@ -12,6 +12,8 @@
         <module>model</module>
         <module>service</module>
         <module>service-gateway</module>
+        <module>service-client</module>
+        <module>web</module>
     </modules>
     <packaging>pom</packaging>
     <!--引入spring boot 父工程-->

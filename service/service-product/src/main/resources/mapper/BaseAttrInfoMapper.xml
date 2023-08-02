@@ -47,4 +47,21 @@
         </where>
         order by bai.category_level,bai.id
     </select>
+<!--    根据skuid获取商品平台属性集合-->
+    <select id="selectBaseAttrInfoListBySkuId" resultMap="baseAttrInfoMap">
+        SELECT
+            bai.id,
+            bai.attr_name,
+            bai.category_id,
+            bai.category_level,
+            bav.id attr_value_id,
+            bav.value_name,
+            bav.attr_id
+        FROM
+            base_attr_info bai
+                INNER JOIN base_attr_value bav ON bai.id = bav.attr_id
+                INNER JOIN sku_attr_value sav ON sav.value_id = bav.id
+        WHERE
+            sav.sku_id = #{skuId}
+    </select>
 </mapper>
