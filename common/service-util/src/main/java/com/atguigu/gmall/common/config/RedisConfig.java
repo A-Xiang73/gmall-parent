@@ -23,6 +23,13 @@ import java.time.Duration;
 /**
  * Redis配置类
  */
+//@encableCacheing 是Springframework中的注解的缓存管理 自spring版本3.1起加入了该注解。如果你使用了这个注解，那么你就不需要在XML文件中配置cache manager了。自spring版本3.1起加入了该注解。如果你使用了这个注解，那么你就不需要在XML文件中配置cache manager了。
+    /*
+    * 当你在配置类(@Configuration)上使用@EnableCaching注解时，会触发一个post processor，
+    * 这会扫描每一个spring bean，查看是否已经存在注解对应的缓存。如果找到了，就会自动创建一个代理拦截方法调用，
+    * 使用缓存的bean执行处理。
+    * */
+
 @Configuration
 @EnableCaching
 public class RedisConfig {
@@ -39,7 +46,7 @@ public class RedisConfig {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         //  设置redis的连接池工厂。
         redisTemplate.setConnectionFactory(redisConnectionFactory);
-        //  设置序列化的。
+        //  设置序列化的。 具体的序列化类 默认的序列化类是乱码 不便观看
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
