@@ -1,5 +1,8 @@
 package com.atguigu.gmall.product.controller.api;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPObject;
+import com.atguigu.gmall.common.result.Result;
 import com.atguigu.gmall.model.product.*;
 import com.atguigu.gmall.product.service.ManageService;
 import io.swagger.annotations.Api;
@@ -24,6 +27,17 @@ import java.util.Map;
 public class ProductApiController {
     @Autowired
     private ManageService manageService;
+    /**
+     * 前端主页获取全部分类信息
+     * @return
+     */
+    @GetMapping("getBaseCategoryList")
+    public Result getBaseCategoryList(){
+        //返回给前端接受的数据类型需要map  这里返回List<Map<String,Object>>
+        //这里使用jSONObject来进行接收 以为其底层封装了Map<String,Object> 使用起来功能更加强大
+        List<JSONObject> map=manageService.getBaseCategoryList();
+        return Result.ok(map);
+    }
     /**
      * 通过skuId 集合来查询数据
      * @param skuId 根据skuid获取平台属性集合

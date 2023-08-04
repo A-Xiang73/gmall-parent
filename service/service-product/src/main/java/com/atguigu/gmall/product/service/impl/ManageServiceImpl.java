@@ -1,5 +1,6 @@
 package com.atguigu.gmall.product.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.atguigu.gmall.common.cache.GmallCache;
 import com.atguigu.gmall.common.config.RedisConfig;
 import com.atguigu.gmall.common.constant.RedisConst;
@@ -27,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author 24657
@@ -73,6 +75,54 @@ public class ManageServiceImpl implements ManageService {
     private RedisTemplate redisTemplate;
     @Autowired
     private RedissonClient redissonClient;
+    /**
+     * 获取返回主页的全部分类信息
+     * @return
+     */
+    @GmallCache(prefix = "category:",suffix = ":info")
+    @Override
+    public List<JSONObject> getBaseCategoryList() {
+        List<BaseCategoryView> baseCategoryViewList = baseCategoryViewMapper.selectList(null);
+        Map<Long, List<BaseCategoryView>> categoryid1Group = baseCategoryViewList.stream().collect(Collectors.groupingBy(BaseCategoryView::getCategory1Id));
+        List<JSONObject> result=new ArrayList<>();
+        int index=1;
+        for (Map.Entry<Long, List<BaseCategoryView>> categoryId1Entry : categoryid1Group.entrySet()) {
+            JSONObject category1Map = new JSONObject();
+            Long category1Id = categoryId1Entry.getKey();
+            category1Map.put("categoryId",category1Id);
+            category1Map.put("index",index);
+            index++;
+            List<BaseCategoryView> category2List = categoryId1Entry.getValue();
+            String category1Name = category2List.get(0).getCategory1Name();
+            category1Map.put("categoryName",category1Name);
+            List<JSONObject> category1Child=new ArrayList<>();
+            //遍历二级分类
+            Map<Long, List<BaseCategoryView>> categoryid2Group = category2List.stream().collect(Collectors.groupingBy(BaseCategoryView::getCategory2Id));
+            for (Map.Entry<Long, List<BaseCategoryView>> categoryId2Entry : categoryid2Group.entrySet()) {
+                JSONObject category2Map = new JSONObject();
+                Long category2Id = categoryId2Entry.getKey();
+                category2Map.put("categoryId",category2Id);
+                List<BaseCategoryView> category3List = categoryId2Entry.getValue();
+                String category2Name = category3List.get(0).getCategory2Name();
+                category2Map.put("categoryName",category2Name);
+                List<JSONObject> category2Child=new ArrayList<>();
+                //遍历三级分类
+                for (BaseCategoryView category3 : category3List) {
+                    JSONObject category3Map = new JSONObject();
+                    Long category3Id = category3.getCategory3Id();
+                    category3Map.put("categoryId",category3Id);
+                    String category3Name = category3.getCategory3Name();
+                    category3Map.put("categoryName",category3Name);
+                    category2Child.add(category3Map);
+                }
+                category2Map.put("categoryChild",category2Child);
+                category1Child.add(category2Map);
+            }
+            category1Map.put("categoryChild",category1Child);
+            result.add(category1Map);
+        }
+        return result;
+    }
     /**
      * 通过skuId 集合来查询数据
      * @param skuId

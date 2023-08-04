@@ -1,5 +1,6 @@
 package com.atguigu.gmall.product.client;
 
+import com.atguigu.gmall.common.result.Result;
 import com.atguigu.gmall.model.product.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,4 +64,6 @@ public interface ProductFeignClient {
      */
     @GetMapping("api/product/inner/getCategoryView/{category3Id}")
     public BaseCategoryView getCategoryView(@PathVariable("category3Id")Long category3Id);
+    @GetMapping("api/product/getBaseCategoryList")
+    public Result getBaseCategoryList();
 }
