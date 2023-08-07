@@ -3,6 +3,8 @@ package com.atguigu.gmall.product.controller;
 import com.atguigu.gmall.common.result.Result;
 import com.atguigu.gmall.model.product.*;
 import com.atguigu.gmall.product.service.ManageService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,39 @@ import java.util.List;
 public class BaseManagerController {
     @Autowired
     private ManageService manageService;
-
+    /**
+     * SKU分页列表
+     * @param page
+     * @param limit
+     * @return
+     */
+    @GetMapping("/list/{page}/{limit}")
+    public Result index( @PathVariable Long page,
+                         @PathVariable Long limit){
+        Page<SkuInfo> pageParam=new Page<>(page,limit);
+        IPage<SkuInfo> pageModel= manageService.getPage(pageParam);
+        return Result.ok(pageModel);
+    }
+    /**
+     * 商品上架
+     * @param skuId
+     * @return
+     */
+    @GetMapping("onSale/{skuId}")
+    public Result onSale(@PathVariable("skuId") Long skuId){
+        manageService.onSale(skuId);
+        return Result.ok();
+    }
+    /**
+     * 商品下架
+     * @param skuId
+     * @return
+     */
+    @GetMapping("cancelSale/{skuId}")
+    public Result cancelSale(@PathVariable("skuId") Long skuId) {
+        manageService.cancelSale(skuId);
+        return Result.ok();
+    }
 
     /* 接口
     选中准修改数据 ， 根据该attrId 去查找AttrInfo，该对象下 List<BaseAttrValue> ！
