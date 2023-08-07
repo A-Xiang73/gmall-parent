@@ -28,6 +28,15 @@ public class ProductApiController {
     @Autowired
     private ManageService manageService;
     /**
+     * 通过品牌Id 集合来查询数据
+     * @param tmId
+     * @return
+     */
+    @GetMapping("inner/getTrademark/{tmId}")
+    public BaseTrademark getTrademark(@PathVariable("tmId")Long tmId){
+        return manageService.getTrademarkByTmId(tmId);
+    }
+    /**
      * 前端主页获取全部分类信息
      * @return
      */

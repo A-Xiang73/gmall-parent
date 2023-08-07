@@ -18,6 +18,13 @@ import java.util.Map;
 @FeignClient(value = "service-product",fallback =ProductDegradeFeignClient.class )
 public interface ProductFeignClient {
     /**
+     * 通过品牌Id 集合来查询数据
+     * @param tmId
+     * @return
+     */
+    @GetMapping("api/product/inner/getTrademark/{tmId}")
+    public BaseTrademark getTrademark(@PathVariable("tmId")Long tmId);
+    /**
      * 通过skuId 集合来查询数据
      * @param skuId 根据skuid获取平台属性集合
      * @return

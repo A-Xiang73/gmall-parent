@@ -3,6 +3,7 @@ package com.atguigu.gmall.item.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.gmall.common.constant.RedisConst;
 import com.atguigu.gmall.item.service.ItemService;
+import com.atguigu.gmall.list.client.ListFeignClient;
 import com.atguigu.gmall.model.product.*;
 import com.atguigu.gmall.product.client.ProductFeignClient;
 import org.redisson.api.RBloomFilter;
@@ -31,6 +32,8 @@ public class ItemServiceImpl implements ItemService {
     /*
     * 远程调用feign
     * */
+    @Autowired
+    private ListFeignClient listFeignClient;
     @Autowired
     private ProductFeignClient productFeignClient;
     @Autowired
@@ -64,6 +67,10 @@ public class ItemServiceImpl implements ItemService {
                 BaseCategoryView categoryView = productFeignClient.getCategoryView(skuInfo.getCategory3Id());
                 result.put("categoryView", categoryView); //返回三级分类
             }
+        }, threadPoolExecutor);
+        //更新商品热点 进行一部编排
+        CompletableFuture<Void> hotScoreCompletableFuture = CompletableFuture.runAsync(() -> {
+            listFeignClient.incrHotScore(skuId);
         }, threadPoolExecutor);
         //获取销售属性以及是否选中关系的异步编排对象
         CompletableFuture<Void> saleIsCheckCompletableFuture = skuCompletableFuture.thenAcceptAsync(skuInfo -> {
@@ -118,7 +125,8 @@ public class ItemServiceImpl implements ItemService {
                 priceCompletableFuture,
                 categoryViewCompletableFuture,
                 saleIsCheckCompletableFuture,
-                skuValueIdsMapCompletableFuture
+                skuValueIdsMapCompletableFuture,
+                hotScoreCompletableFuture
         ).join();
         return result;
     }

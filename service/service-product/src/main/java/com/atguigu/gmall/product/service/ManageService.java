@@ -61,4 +61,6 @@ public interface ManageService {
     List<BaseAttrInfo> getAttrList(Long skuId);
 
     List<JSONObject> getBaseCategoryList();
+
+    BaseTrademark getTrademarkByTmId(Long tmId);
 }

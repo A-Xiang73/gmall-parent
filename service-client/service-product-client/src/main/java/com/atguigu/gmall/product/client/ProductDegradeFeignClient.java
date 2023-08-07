@@ -21,6 +21,11 @@ public class ProductDegradeFeignClient implements ProductFeignClient{
     }
 
     @Override
+    public BaseTrademark getTrademark(Long tmId) {
+        return null;
+    }
+
+    @Override
     public List<BaseAttrInfo> getAttrList(Long skuId) {
         return null;
     }
