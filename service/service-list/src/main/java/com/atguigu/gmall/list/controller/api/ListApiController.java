@@ -5,13 +5,16 @@ import com.atguigu.gmall.list.service.SearchService;
 import com.atguigu.gmall.model.list.Goods;
 
 
+import com.atguigu.gmall.model.list.SearchParam;
+import com.atguigu.gmall.model.list.SearchResponseVo;
+import lombok.experimental.PackagePrivate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author 24657
@@ -26,6 +29,7 @@ public class ListApiController {
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
     @Autowired
     private SearchService searchService;
+
 
     //初始化mapping结构到es中
     @GetMapping("inner/createIndex")
@@ -65,5 +69,16 @@ public class ListApiController {
     public Result incrHotScore(@PathVariable("skuId") Long skuId){
         searchService.incrHotScore(skuId);
         return Result.ok();
+    }
+    /**
+     * 搜索商品
+     * @param searchParam
+     * @return
+     * @throws IOException
+     */
+    @PostMapping()
+    public Result list(@RequestBody SearchParam searchParam) throws IOException {
+        SearchResponseVo response = searchService.search(searchParam);
+        return Result.ok(response);
     }
 }

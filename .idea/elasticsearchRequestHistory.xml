@@ -7,6 +7,18 @@
           <value>
             <list>
               <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;query&quot;: {&#10;    &quot;bool&quot;: {&#10;      &quot;filter&quot;: {&#10;        &quot;term&quot;: {&#10;          &quot;tmId&quot;: {&#10;            &quot;value&quot;: &quot;61&quot;&#10;          }&#10;        }&#10;      }&#10;    }&#10;  }&#10;}" />
+                <option name="path" value="/goods/_search" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;query&quot;: {&#10;    &quot;match&quot;: {&#10;      &quot;tmName&quot;: {&#10;        &quot;query&quot;: &quot;小米手机&quot;,&#10;        &quot;operator&quot;: &quot;AND&quot;&#10;      }&#10;    }&#10;  }&#10;}" />
+                <option name="path" value="/goods/_search" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;from&quot;: 0,&#10;  &quot;size&quot;: 50,&#10;  &quot;query&quot;: {&#10;    &quot;match_all&quot;: {}&#10;  }&#10;}" />
+                <option name="path" value="/goods/_search" />
+              </HistoryRequest>
+              <HistoryRequest>
                 <option name="path" value="/goods/_search" />
               </HistoryRequest>
               <HistoryRequest>
