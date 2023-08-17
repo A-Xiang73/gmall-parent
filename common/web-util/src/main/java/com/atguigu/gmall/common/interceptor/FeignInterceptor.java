@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class FeignInterceptor implements RequestInterceptor {
 
+    //feign在传递请求头的时候会存在丢失请求头数据
     public void apply(RequestTemplate requestTemplate){
             //  微服务远程调用使用feign ，feign 传递数据的时候，没有。
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

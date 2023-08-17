@@ -2,6 +2,7 @@ package com.atguigu.gmall.list.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.gmall.common.constant.RedisConst;
+import com.atguigu.gmall.common.service.RabbitService;
 import com.atguigu.gmall.list.repository.GoodsRepository;
 import com.atguigu.gmall.list.service.SearchService;
 import com.atguigu.gmall.model.list.*;
@@ -62,6 +63,9 @@ public class SearchServiceImpl implements SearchService {
     private ProductFeignClient productFeignClient;
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private RabbitService rabbitService;
 
     //es高级客户端类
     @Autowired
@@ -321,7 +325,7 @@ public class SearchServiceImpl implements SearchService {
         int from = (searchParam.getPageNo()-1)*searchParam.getPageSize();
         searchSourceBuilder.from(from);
         searchSourceBuilder.size(searchParam.getPageSize());
-        //排序
+        //排序排序
         String order = searchParam.getOrder();
         if (!StringUtils.isEmpty(order)) {
             //判断排序规则 1：asc 1：desc , 2：asc 2：desc

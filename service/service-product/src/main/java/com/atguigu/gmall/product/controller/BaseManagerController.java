@@ -1,6 +1,7 @@
 package com.atguigu.gmall.product.controller;
 
 import com.atguigu.gmall.common.result.Result;
+import com.atguigu.gmall.common.service.RabbitService;
 import com.atguigu.gmall.model.product.*;
 import com.atguigu.gmall.product.service.ManageService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -22,6 +23,7 @@ import java.util.List;
 public class BaseManagerController {
     @Autowired
     private ManageService manageService;
+
     /**
      * SKU分页列表
      * @param page
@@ -43,6 +45,7 @@ public class BaseManagerController {
     @GetMapping("onSale/{skuId}")
     public Result onSale(@PathVariable("skuId") Long skuId){
         manageService.onSale(skuId);
+
         return Result.ok();
     }
     /**

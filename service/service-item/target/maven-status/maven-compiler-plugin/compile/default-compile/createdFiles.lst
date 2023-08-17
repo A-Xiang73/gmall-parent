@@ -1,4 +1,5 @@
 com\atguigu\gmall\item\service\impl\ItemServiceImpl.class
 com\atguigu\gmall\item\service\ItemService.class
+com\atguigu\gmall\item\config\ThreadPoolConfig.class
 com\atguigu\gmall\item\ServiceItemApplication.class
 com\atguigu\gmall\item\controller\ItemApiController.class

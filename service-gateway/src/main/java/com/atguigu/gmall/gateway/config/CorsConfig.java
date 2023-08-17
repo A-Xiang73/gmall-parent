@@ -1,4 +1,4 @@
-package com.atguigu.gmall.gateway;
+package com.atguigu.gmall.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

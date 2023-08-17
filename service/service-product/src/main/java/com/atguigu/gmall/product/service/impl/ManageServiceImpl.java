@@ -3,7 +3,9 @@ package com.atguigu.gmall.product.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.gmall.common.cache.GmallCache;
 import com.atguigu.gmall.common.config.RedisConfig;
+import com.atguigu.gmall.common.constant.MqConst;
 import com.atguigu.gmall.common.constant.RedisConst;
+import com.atguigu.gmall.common.service.RabbitService;
 import com.atguigu.gmall.model.product.*;
 import com.atguigu.gmall.product.mapper.*;
 import com.atguigu.gmall.product.service.ManageService;
@@ -37,7 +39,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ManageServiceImpl implements ManageService {
-
+    @Autowired
+    private RabbitService rabbitService;
     @Autowired
     private BaseCategory1Mapper baseCategory1Mapper;
     @Autowired
@@ -241,13 +244,7 @@ public class ManageServiceImpl implements ManageService {
     @Override
     @GmallCache(prefix = "sku:",suffix = ":info")
     public SkuInfo getSkuInfo(Long skuId) {
-        SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
-        // 根据skuId 查询图片列表集合
-        QueryWrapper<SkuImage> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("sku_id", skuId);
-        List<SkuImage> skuImageList = skuImageMapper.selectList(queryWrapper);
-
-        skuInfo.setSkuImageList(skuImageList);
+        SkuInfo skuInfo = getSkuInfoRedisson(skuId);
         return skuInfo;
     }
 
@@ -373,7 +370,6 @@ public class ManageServiceImpl implements ManageService {
         QueryWrapper<SkuImage> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("sku_id", skuId);
         List<SkuImage> skuImageList = skuImageMapper.selectList(queryWrapper);
-
         skuInfo.setSkuImageList(skuImageList);
         return skuInfo;
     }
@@ -390,6 +386,8 @@ public class ManageServiceImpl implements ManageService {
         skuInfo.setId(skuId);
         skuInfo.setIsSale(1);
         skuInfoMapper.updateById(skuInfo);
+        //商品上架
+        rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_GOODS,MqConst.ROUTING_GOODS_UPPER,skuId);
     }
     /**
      * SKU分页列表
@@ -404,6 +402,8 @@ public class ManageServiceImpl implements ManageService {
         skuInfo.setId(skuId);
         skuInfo.setIsSale(0);
         skuInfoMapper.updateById(skuInfo);
+        //商品下架
+        rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_GOODS, MqConst.ROUTING_GOODS_LOWER, skuId);
     }
     @Override
     public IPage<SkuInfo> getPage(Page<SkuInfo> pageParam) {

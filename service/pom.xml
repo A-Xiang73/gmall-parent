@@ -10,6 +10,11 @@
     <modules>
         <module>service-product</module>
         <module>service-item</module>
+        <module>service-user</module>
+        <module>service-cart</module>
+        <module>service-order</module>
+        <module>service-mq</module>
+        <module>service-payment</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
 
